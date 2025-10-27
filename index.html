@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sharks from Space | Future Outlook</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+
+<!-- Model Viewer -->
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+
+<style>
+:root{
+  --sea:#041224;
+  --glow:#00e1ff;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:"Poppins",sans-serif;
+  background:var(--sea);
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* Stars Background */
+#stars{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:-1;
+}
+
+/* Header */
+header{
+  position:fixed;
+  top:0; left:0; width:100%;
+  z-index:100;
+  background:rgba(7,26,48,0.95);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:15px 40px;
+  max-width:1200px;
+  margin:auto;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+  color:var(--glow);
+  text-shadow:0 0 15px var(--glow);
+}
+.brand .dot{
+  width:12px;
+  height:12px;
+  background:var(--glow);
+  border-radius:50%;
+  box-shadow:0 0 15px var(--glow);
+}
+.nav-links{
+  display:flex;
+  gap:20px;
+  list-style:none;
+}
+.nav-links a{
+  text-decoration:none;
+  color:#fff;
+  font-weight:500;
+  transition:0.3s;
+}
+.nav-links a:hover,.nav-links a.active{
+  color:var(--glow);
+  text-shadow:0 0 10px var(--glow);
+}
+
+/* Hamburger */
+.hamburger{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  cursor:pointer;
+  z-index:200;
+}
+.hamburger span{
+  width:28px;
+  height:3px;
+  background:var(--glow);
+  border-radius:2px;
+  transition:0.3s;
+}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.active span:nth-child(2){opacity:0;}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px);}
+
+/* Mobile Menu */
+@media (max-width: 991px) {
+  .hamburger { display: flex; }
+  .nav-links {
+    position: fixed;
+    top: 70px;
+    right: -100%;
+    flex-direction: column;
+    background: rgba(7,26,48,0.98);
+    width: 70%;
+    height: 100vh;
+    align-items: center;
+    justify-content: start;
+    padding-top: 50px;
+    gap: 20px;
+    transition: 0.4s;
+    z-index: 150;
+  }
+  .nav-links.open { right: 0; }
+}
+
+/* Zoom buttons */
+.btn {
+  width:50px; height:50px; background:var(--glow); color:#041224;
+  border-radius:50%; border:none;
+  position:fixed; cursor:pointer;
+  text-align:center; line-height:50px;
+  z-index:101; font-size:24px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 15px var(--glow);
+}
+.btn:hover{background:#00ffff; color:#000;}
+.zoom{bottom:180px; right:20px;}
+.zoom-out{bottom:110px; right:20px;}
+.zoom-init{bottom:40px; right:20px;}
+
+/* Shark info */
+.shark-info{
+  position:fixed; bottom:10px; left:10px;
+  background:rgba(0,0,0,0.7);
+  padding:10px 15px;
+  border-radius:8px;
+  color:#fff; font-weight:500;
+  max-width:250px; font-size:14px;
+  z-index:101;
+  box-shadow:0 0 10px var(--glow);
+}
+
+/* Model Viewer fix */
+model-viewer {
+  --poster-color: transparent !important;
+  background: transparent !important;
+}
+model-viewer::part(default-progress-bar){display:none;}
+</style>
+</head>
+
+<body>
+
+<!-- Stars -->
+<canvas id="stars"></canvas>
+
+<!-- Header -->
+<header>
+  <nav class="nav">
+    <div class="brand"><span class="dot"></span> Sharks from Space</div>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="mission.html">Mission</a></li>
+      <li><a href="hard.html">Tech Foundation</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="pro.html">Prototype</a></li>
+      <li><a href="learn.html">Learn more</a></li>
+      <li><a href="few.html" class="active">Future Outlook</a></li>
+      <li><a href="team.html">Team</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Zoom Buttons -->
+<button class="btn zoom">+</button>
+<button class="btn zoom-out">−</button>
+<button class="btn zoom-init">⟳</button>
+
+<!-- Info Box -->
+<div id="sharkInfo" class="shark-info">Click on a shark to see details!</div>
+
+<!-- 3D Earth -->
+<model-viewer
+    id="threedd"
+    src="./models/earth.glb"
+    camera-controls
+    auto-rotate
+    exposure="1"
+    shadow-intensity="1"
+    poster="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+    style="width:90%; max-width:800px; height:500px; display:block; margin:120px auto 50px auto;"
+></model-viewer>
+
+<script>
+// Hamburger Toggle
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  navLinks.classList.toggle('open');
+});
+
+// Stars Background
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let w = canvas.width = window.innerWidth;
+let h = canvas.height = window.innerHeight;
+let stars = [];
+
+function initStars() {
+  stars = [];
+  for(let i=0;i<200;i++){
+    stars.push({
+      x: Math.random()*w,
+      y: Math.random()*h,
+      r: Math.random()*1.5 + 0.5,
+      alpha: Math.random()
+    });
+  }
+}
+
+function drawStars(){
+  ctx.clearRect(0,0,w,h);
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+window.addEventListener('resize', ()=>{
+  w = canvas.width = window.innerWidth;
+  h = canvas.height = window.innerHeight;
+  initStars();
+});
+
+initStars();
+drawStars();
+
+// 3D Earth
+const mv = document.querySelector('#threedd');
+mv.exposure = 0.5;
+mv.shadowIntensity = 0.5;
+mv.cameraControls = true;
+mv.autoRotate = true;
+
+// Zoom Controls
+let zoom = 2;
+const setZoom = () => mv.cameraOrbit = `0deg 75deg ${zoom}m`;
+setZoom();
+document.querySelector('.zoom').addEventListener('click', ()=> { zoom = Math.max(1, zoom-0.5); setZoom(); });
+document.querySelector('.zoom-out').addEventListener('click', ()=> { zoom += 0.5; setZoom(); });
+document.querySelector('.zoom-init').addEventListener('click', ()=> { zoom=2; setZoom(); });
+
+// Sharks Hotspots
+const sharkInfo = document.getElementById('sharkInfo');
+const sharks = [
+  {name:'Shark 1', pos:[0,0.3,0], model:'./models/shark.glb', info:'Shark 1 Info', lat:10, lon:20},
+  {name:'Shark 2', pos:[0.4,0.3,0.2], model:'./models/shark.glb', info:'Shark 2 Info', lat:-15, lon:45},
+  {name:'Shark 3', pos:[-0.4,0.3,-0.2], model:'./models/shark.glb', info:'Shark 3 Info', lat:30, lon:-60},
+  {name:'Shark 4', pos:[0.2,0.4,-0.3], model:'./models/shark.glb', info:'Shark 4 Info', lat:-25, lon:10},
+  {name:'Shark 5', pos:[-0.3,0.2,0.4], model:'./models/shark.glb', info:'Shark 5 Info', lat:15, lon:-30},
+  {name:'Shark 6', pos:[0.1,0.5,0.1], model:'./models/shark.glb', info:'Shark 6 Info', lat:-5, lon:50},
+];
+
+sharks.forEach((shark,i)=>{
+  const hotspot = document.createElement('button');
+  hotspot.slot = `hotspot-${i+1}`;
+  hotspot.setAttribute('data-position', shark.pos.join('m ')+'m');
+  hotspot.setAttribute('data-normal','0 1 0');
+  hotspot.style.width='3rem';
+  hotspot.style.height='3rem';
+  hotspot.style.background='transparent';
+  hotspot.style.border='none';
+  hotspot.style.cursor='pointer';
+  hotspot.innerHTML = `<model-viewer src="${shark.model}" style="width:100%; height:100%; background:transparent;"></model-viewer>`;
+  mv.appendChild(hotspot);
+  hotspot.addEventListener('click', ()=>{
+    sharkInfo.innerHTML = `<b>${shark.name}</b><br>${shark.info}<br>Lat: ${shark.lat}°, Lon: ${shark.lon}°`;
+    sharks.forEach(s=>{ if(s.element) s.element.style.transform='scale(1)'; });
+    hotspot.style.transform='scale(1.4)';
+  });
+  shark.element = hotspot;
+});
+</script>
+</body>
+</html>
